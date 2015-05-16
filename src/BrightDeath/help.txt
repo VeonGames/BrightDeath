@@ -1,0 +1,14 @@
++--------------------------------------------------+
+|Welcome to BrightDeath here are some instructions:|
+|move with the WASD keys!			   |
+|attack with the arrow keys!			   |
+|press b to open your inventory			   |
+|press escape to open the pause menu 		   |
+|						   |
+|						   |
+|						   |
+|Objectives:					   |
+|1. kill monsters to get items			   |
+|2. kill monsters to gain XP and LEVEL UP!!!	   |
+|3. explore the massive world of Bright Death	   |
++--------------------------------------------------+
