@@ -65,7 +65,7 @@ public class ClientConnector extends Thread
             {
                 
                 GV.holder.repaint();
-                //GV.connect = !readBoolean(inpt);
+                GV.connect = !readBoolean(inpt);
                 tempx=GV.xPos;
                 tempy=GV.yPos;
                 writeInt(500-tempx+GV.oldXPos,otpt);
@@ -150,6 +150,10 @@ public class ClientConnector extends Thread
                         {
                             catchem = new OtherPlayer(readInt(inpt), readInt(inpt));
                             GV.otherPlayers.add(catchem);
+                            catchem.setAttacking(0, readBoolean(inpt));
+                            catchem.setAttacking(1, readBoolean(inpt));
+                            catchem.setAttacking(2, readBoolean(inpt));
+                            catchem.setAttacking(3, readBoolean(inpt));
                         }
                         else
                         {
@@ -158,7 +162,6 @@ public class ClientConnector extends Thread
                         }
                     }
                 }
-                //System.out.println("test: "+readInt(inpt));
 
                 for (Monster bill : GV.monsters)
                 {
@@ -166,7 +169,7 @@ public class ClientConnector extends Thread
                     if (temp == 0)
                     {
                         //readInt(inpt);
-                        //System.out.println("server: "+readInt(inpt)+" acual: "+GV.xPos+" Old: "+GV.oldXPos);
+                        System.out.println("server: "+readInt(inpt)+" acual: "+GV.xPos+" Old: "+GV.oldXPos);
                         bill.setMonsterX(readInt(inpt)-GV.xPos-2000);
                         //bill.setMonsterX(readInt(inpt));
                         bill.setMonsterY(readInt(inpt)-GV.yPos-2000);
@@ -182,6 +185,7 @@ public class ClientConnector extends Thread
                         GV.lootBags.add(new LootBag(bill.getMonsterX(), bill.getMonsterY(), bill.getMaxLoot()));
                     }
                 }
+                
                 if (GV.connect)
                 {
                     //System.out.println("running");
