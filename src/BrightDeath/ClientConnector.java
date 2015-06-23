@@ -80,51 +80,57 @@ public class ClientConnector extends Thread
                 }
                 
                 writeInt(GV.current.getTypeAttack() ,otpt);
-                if (GV.up)
-                {
-                    if (GV.right)
-                    {
-                        writeInt(1,otpt);
-                    }
-                    else if (GV.left)
-                    {
-                        writeInt(7,otpt);
-                    }
-                    else
-                    {                
-                        writeInt(0,otpt);
-                    }
-                }
-                else if (GV.down)
-                {
-                    if (GV.right)
-                    {
-                        writeInt(3,otpt);
-                    }
-                    else if (GV.left)
-                    {
-                        writeInt(5,otpt);
-                    }
-                    else
-                    {                
-                        writeInt(4,otpt);
-                    }
-                }
-                else
-                {
-                    if (GV.right)
-                    {
-                        writeInt(3,otpt);
-                    }
-                    else if (GV.left)
-                    {
-                        writeInt(6,otpt);
-                    }
-                    else
-                    {
-                        writeInt(8,otpt);
-                    }
-                }
+                writeBoolean(GV.up, otpt);
+                writeBoolean(GV.down, otpt);
+                writeBoolean(GV.left, otpt);
+                writeBoolean(GV.right, otpt);
+                
+                //this was inefficient but i feel like there was reason to my maddness
+//                if (GV.up)
+//                {
+//                    if (GV.right)
+//                    {
+//                        writeInt(1,otpt);
+//                    }
+//                    else if (GV.left)
+//                    {
+//                        writeInt(7,otpt);
+//                    }
+//                    else
+//                    {                
+//                        writeInt(0,otpt);
+//                    }
+//                }
+//                else if (GV.down)
+//                {
+//                    if (GV.right)
+//                    {
+//                        writeInt(3,otpt);
+//                    }
+//                    else if (GV.left)
+//                    {
+//                        writeInt(5,otpt);
+//                    }
+//                    else
+//                    {                
+//                        writeInt(4,otpt);
+//                    }
+//                }
+//                else
+//                {
+//                    if (GV.right)
+//                    {
+//                        writeInt(3,otpt);
+//                    }
+//                    else if (GV.left)
+//                    {
+//                        writeInt(6,otpt);
+//                    }
+//                    else
+//                    {
+//                        writeInt(8,otpt);
+//                    }
+//                }
                 
                 numRemoved = readInt(inpt);
                 for (int i = 0; i < numRemoved; i++)
@@ -145,7 +151,7 @@ public class ClientConnector extends Thread
                         }
                     }
                     else
-                    {
+                    { //other players
                         if (readBoolean(inpt))
                         {
                             catchem = new OtherPlayer(readInt(inpt), readInt(inpt));
@@ -169,7 +175,7 @@ public class ClientConnector extends Thread
                     if (temp == 0)
                     {
                         //readInt(inpt);
-                        System.out.println("server: "+readInt(inpt)+" acual: "+GV.xPos+" Old: "+GV.oldXPos);
+                        //System.out.println("server: "+readInt(inpt)+" acual: "+GV.xPos+" Old: "+GV.oldXPos); //I think this part works
                         bill.setMonsterX(readInt(inpt)-GV.xPos-2000);
                         //bill.setMonsterX(readInt(inpt));
                         bill.setMonsterY(readInt(inpt)-GV.yPos-2000);
