@@ -73,25 +73,12 @@ public class Draw extends JComponent
 
         graph.drawImage(GV.playerPics[0][0], (int) (GV.width * .5), (int) (GV.height * .5), (int) (50*GV.sizeMod), (int) (GV.sizeMod*50), null);
 
-        //Fix this for new attacks
         
-//        for (int i = 0; i < GV.otherPlayers.size(); i++)
-//        {
-//            OtherPlayer other = (OtherPlayer) GV.otherPlayers.get(i);
-//            ArrayList attack = null;
-//            try
-//            {
-//                attack = GV.makeAttack(other.isAttacking(0), other.isAttacking(1), other.isAttacking(2), other.isAttacking(3), other.getXpos() + GV.xPos, other.getYpos() + GV.yPos);
-//            }
-//            catch (IOException ex)
-//            {
-//                Logger.getLogger(Draw.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            if (attack != null)
-//            {
-//                graph.drawImage((BufferedImage) attack.get(0), (int) (((int)attack.get(1))*GV.sizeMod), (int) ((int)attack.get(2)*GV.sizeMod), (int) (GV.sizeMod*50), (int) (GV.sizeMod*50), null);
-//            }
-//        }
+        for(int i=0;i<GV.attackBoxes.size();i++)
+        {
+            AttackBox ab = GV.attackBoxes.get(i);
+            graph.drawImage(GV.attackPics.get(ab.getType()),(int) ((GV.xPos + ab.getXPosition())*GV.sizeMod)+((int)(GV.width*.5)), (int) ((GV.yPos + ab.getYPosition())*GV.sizeMod)+((int)(GV.height*.5)),(int) (GV.sizeMod*50),(int) (GV.sizeMod*50),null);
+        }
         
         if (GV.waitForAttack <= 2)
         {

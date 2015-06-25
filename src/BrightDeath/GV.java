@@ -69,6 +69,7 @@ public class GV
     static int oldXPos = 0;
     static int oldYPos = 0;
     static Weapon current = new Weapon();
+    static List<AttackBox> attackBoxes= new ArrayList();
     
     /*public static ArrayList makeAttack(boolean up, boolean right, boolean down, boolean left, int xPos, int yPos) throws IOException
     {
