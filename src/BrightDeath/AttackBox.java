@@ -8,9 +8,9 @@ public class AttackBox
     
     public AttackBox(int xPosition, int yPosition, int type)
     {
-        this.xPosition=xPosition;
-        this.yPosition=yPosition;
-        this.type=type;
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+        this.type = type;
     }
     
     public int getType()

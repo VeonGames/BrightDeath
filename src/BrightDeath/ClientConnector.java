@@ -25,17 +25,17 @@ public class ClientConnector extends Thread
         OutputStream otpt;
         InputStream inpt;
         OtherPlayer catchem;
-        
+
         try
         {
-            
+
             //theClient = new Socket("76.167.196.16", 16030);
             theClient = new Socket(GV.serverName, 16030);
             inpt = theClient.getInputStream();
             otpt = theClient.getOutputStream();
             String s = InetAddress.getLocalHost().getHostAddress();
             System.out.println(s);
-            
+
             s = s.substring(s.indexOf("/") + 1);
             writeInt(Integer.parseInt(s.substring(0, s.indexOf("."))), otpt);
             s = s.substring(s.indexOf(".") + 1);
@@ -44,7 +44,7 @@ public class ClientConnector extends Thread
             writeInt(Integer.parseInt(s.substring(0, s.indexOf("."))), otpt);
             s = s.substring(s.indexOf(".") + 1);
             writeInt(Integer.parseInt(s), otpt);
-            
+
             int num = readInt(inpt);
             for (int k = 0; k < num; k++)
             {
@@ -59,85 +59,78 @@ public class ClientConnector extends Thread
             int temp;
             int numberOtherPlayers;
             int numRemoved;
-            int tempx,tempy;
+            int tempx, tempy;
 
             while (GV.connect)
             {
-                
+
                 GV.holder.repaint();
                 GV.connect = !readBoolean(inpt);
-                tempx=GV.xPos;
-                tempy=GV.yPos;
-                writeInt(500-tempx+GV.oldXPos,otpt);
-                writeInt(500-tempy+GV.oldYPos, otpt);
-                GV.oldXPos=tempx;
-                GV.oldYPos=tempy;
+                tempx = GV.xPos;
+                tempy = GV.yPos;
+                writeInt(500 - tempx + GV.oldXPos, otpt);
+                writeInt(500 - tempy + GV.oldYPos, otpt);
+                GV.oldXPos = tempx;
+                GV.oldYPos = tempy;
                 GV.health = readInt(inpt);
                 GV.xp = readInt(inpt);
                 if (readBoolean(inpt))
                 {
                     GV.level++;
                 }
-                
-                writeInt(GV.current.getTypeAttack() ,otpt);
-                writeBoolean(GV.up, otpt);
-                writeBoolean(GV.down, otpt);
-                writeBoolean(GV.left, otpt);
-                writeBoolean(GV.right, otpt);
-                
-                //this was inefficient but i feel like there was reason to my maddness
-//                if (GV.up)
-//                {
-//                    if (GV.right)
-//                    {
-//                        writeInt(1,otpt);
-//                    }
-//                    else if (GV.left)
-//                    {
-//                        writeInt(7,otpt);
-//                    }
-//                    else
-//                    {                
-//                        writeInt(0,otpt);
-//                    }
-//                }
-//                else if (GV.down)
-//                {
-//                    if (GV.right)
-//                    {
-//                        writeInt(3,otpt);
-//                    }
-//                    else if (GV.left)
-//                    {
-//                        writeInt(5,otpt);
-//                    }
-//                    else
-//                    {                
-//                        writeInt(4,otpt);
-//                    }
-//                }
-//                else
-//                {
-//                    if (GV.right)
-//                    {
-//                        writeInt(3,otpt);
-//                    }
-//                    else if (GV.left)
-//                    {
-//                        writeInt(6,otpt);
-//                    }
-//                    else
-//                    {
-//                        writeInt(8,otpt);
-//                    }
-//                }
-                
+
+//                writeBoolean(GV.up, otpt);
+//                writeBoolean(GV.down, otpt);
+//                writeBoolean(GV.left, otpt);
+//                writeBoolean(GV.right, otpt);
+                writeBoolean(GV.up || GV.down || GV.left || GV.right, otpt);
+                if (GV.up || GV.down || GV.left || GV.right)
+                {
+                    if (GV.up)
+                    {
+                        if (GV.right)
+                        {
+                            writeInt(1, otpt);
+                        } else if (GV.left)
+                        {
+                            writeInt(7, otpt);
+                        } else
+                        {
+                            writeInt(0, otpt);
+                        }
+                    } else if (GV.down)
+                    {
+                        if (GV.right)
+                        {
+                            writeInt(3, otpt);
+                        } else if (GV.left)
+                        {
+                            writeInt(5, otpt);
+                        } else
+                        {
+                            writeInt(4, otpt);
+                        }
+                    } else
+                    {
+                        if (GV.right)
+                        {
+                            writeInt(3, otpt);
+                        } else if (GV.left)
+                        {
+                            writeInt(6, otpt);
+                        } else
+                        {
+                            writeInt(8, otpt);
+                        }
+                    }
+                }
+
                 numRemoved = readInt(inpt);
                 for (int i = 0; i < numRemoved; i++)
                 {
                     GV.otherPlayers.remove(readInt(inpt));
                 }
-                
+
                 numberOtherPlayers = readInt(inpt);
                 for (int i = 0; i < numberOtherPlayers; i++)
                 {
@@ -149,8 +142,7 @@ public class ClientConnector extends Thread
                             p.setXpos(readInt(inpt));
                             p.setYpos(readInt(inpt));
                         }
-                    }
-                    else
+                    } else
                     { //other players
                         if (readBoolean(inpt))
                         {
@@ -160,8 +152,7 @@ public class ClientConnector extends Thread
                             catchem.setAttacking(1, readBoolean(inpt));
                             catchem.setAttacking(2, readBoolean(inpt));
                             catchem.setAttacking(3, readBoolean(inpt));
-                        }
-                        else
+                        } else
                         {
                             catchem = new OtherPlayer(-5000, -5000);
                             GV.otherPlayers.add(catchem);
@@ -176,22 +167,20 @@ public class ClientConnector extends Thread
                     {
                         //readInt(inpt);
                         //System.out.println("server: "+readInt(inpt)+" acual: "+GV.xPos+" Old: "+GV.oldXPos); //I think this part works
-                        bill.setMonsterX(readInt(inpt)-GV.xPos-2000);
+                        bill.setMonsterX(readInt(inpt) - GV.xPos - 2000);
                         //bill.setMonsterX(readInt(inpt));
-                        bill.setMonsterY(readInt(inpt)-GV.yPos-2000);
+                        bill.setMonsterY(readInt(inpt) - GV.yPos - 2000);
 //                        bill.setMonsterY(readInt(inpt));
-                    }
-                    else if (temp == 1)
+                    } else if (temp == 1)
                     {
                         bill.setAlive(false);
-                    }
-                    else if (temp == 2)
+                    } else if (temp == 2)
                     {
                         bill.setAlive(false);
                         GV.lootBags.add(new LootBag(bill.getMonsterX(), bill.getMonsterY(), bill.getMaxLoot()));
                     }
                 }
-                
+
                 if (GV.connect)
                 {
                     //System.out.println("running");
