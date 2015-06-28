@@ -29,8 +29,8 @@ public class ClientConnector extends Thread
         try
         {
 
-            //theClient = new Socket("76.167.196.16", 16030);
-            theClient = new Socket(GV.serverName, 16030);
+            theClient = new Socket("192.168.1.220", 16030);
+            //theClient = new Socket(GV.serverName, 16030);
             inpt = theClient.getInputStream();
             otpt = theClient.getOutputStream();
             String s = InetAddress.getLocalHost().getHostAddress();
@@ -44,6 +44,7 @@ public class ClientConnector extends Thread
             writeInt(Integer.parseInt(s.substring(0, s.indexOf("."))), otpt);
             s = s.substring(s.indexOf(".") + 1);
             writeInt(Integer.parseInt(s), otpt);
+            writeString(GV.name, otpt);
 
             int num = readInt(inpt);
             for (int k = 0; k < num; k++)
@@ -60,12 +61,13 @@ public class ClientConnector extends Thread
             int numberOtherPlayers;
             int numRemoved;
             int tempx, tempy;
-
+            System.out.println("client- conect: initialization compleate: " + GV.connect);
             while (GV.connect)
             {
-
+                System.out.println("attack boxes list size: "+GV.attackBoxes.size());
                 GV.holder.repaint();
                 GV.connect = !readBoolean(inpt);
+                System.out.println("GV.connect == " + GV.connect);
                 tempx = GV.xPos;
                 tempy = GV.yPos;
                 writeInt(500 - tempx + GV.oldXPos, otpt);
@@ -79,10 +81,6 @@ public class ClientConnector extends Thread
                     GV.level++;
                 }
 
-//                writeBoolean(GV.up, otpt);
-//                writeBoolean(GV.down, otpt);
-//                writeBoolean(GV.left, otpt);
-//                writeBoolean(GV.right, otpt);
                 writeBoolean(GV.up || GV.down || GV.left || GV.right, otpt);
                 if (GV.up || GV.down || GV.left || GV.right)
                 {
@@ -124,7 +122,7 @@ public class ClientConnector extends Thread
                         }
                     }
                 }
-
+//starts here
                 numRemoved = readInt(inpt);
                 for (int i = 0; i < numRemoved; i++)
                 {
@@ -142,16 +140,13 @@ public class ClientConnector extends Thread
                             p.setXpos(readInt(inpt));
                             p.setYpos(readInt(inpt));
                         }
-                    } else
+                    } 
+                    else
                     { //other players
                         if (readBoolean(inpt))
                         {
                             catchem = new OtherPlayer(readInt(inpt), readInt(inpt));
                             GV.otherPlayers.add(catchem);
-                            catchem.setAttacking(0, readBoolean(inpt));
-                            catchem.setAttacking(1, readBoolean(inpt));
-                            catchem.setAttacking(2, readBoolean(inpt));
-                            catchem.setAttacking(3, readBoolean(inpt));
                         } else
                         {
                             catchem = new OtherPlayer(-5000, -5000);
@@ -159,6 +154,7 @@ public class ClientConnector extends Thread
                         }
                     }
                 }
+
 
                 for (Monster bill : GV.monsters)
                 {
@@ -171,6 +167,7 @@ public class ClientConnector extends Thread
                         //bill.setMonsterX(readInt(inpt));
                         bill.setMonsterY(readInt(inpt) - GV.yPos - 2000);
 //                        bill.setMonsterY(readInt(inpt));
+                        
                     } else if (temp == 1)
                     {
                         bill.setAlive(false);
@@ -180,7 +177,14 @@ public class ClientConnector extends Thread
                         GV.lootBags.add(new LootBag(bill.getMonsterX(), bill.getMonsterY(), bill.getMaxLoot()));
                     }
                 }
-
+                
+                temp=readInt(inpt);
+                GV.attackBoxes.clear();
+                for (int i=0;i<temp;i++)
+                {
+                    GV.attackBoxes.add(new AttackBox(readInt(inpt)-2000-GV.xPos,readInt(inpt)-2000-GV.xPos,readInt(inpt)));
+                }
+                
                 if (GV.connect)
                 {
                     //System.out.println("running");
@@ -188,7 +192,7 @@ public class ClientConnector extends Thread
                 } else
                 {
                     writeBoolean(false, otpt);
-                    System.out.println("sucessful disconnect");
+                    System.out.println("sucessful disconnect: " + GV.connect);
                     System.exit(0);
                     System.out.println("sucessful disconnect2");
                 }
@@ -199,9 +203,17 @@ public class ClientConnector extends Thread
             System.exit(0);
         }
     }
+    private int debugger = 0;
+    private boolean debug = false;
 
     public void writeBoolean(boolean boolToSend, OutputStream otpt)
     {
+        if (debug)
+        {
+            System.out.println("Writing Bool: " + debugger);
+            debugger++;
+        }
+
         try
         {
             if (boolToSend)
@@ -219,6 +231,12 @@ public class ClientConnector extends Thread
 
     public boolean readBoolean(InputStream inpt) //change this back to orginal booleans
     {
+        if (debug)
+        {
+            System.out.println("Reading Bool: " + debugger);
+            debugger++;
+        }
+
         try
         {
             if (inpt.read() == 0)
@@ -234,8 +252,14 @@ public class ClientConnector extends Thread
         }
     }
 
-    public static void writeInt(int intToSend, OutputStream otpt)
+    public void writeInt(int intToSend, OutputStream otpt)
     {
+        if (debug)
+        {
+            System.out.println("Writing int: " + debugger);
+            debugger++;
+        }
+
         try
         {
             while (intToSend > 0)
@@ -257,8 +281,14 @@ public class ClientConnector extends Thread
         }
     }
 
-    public static int readInt(InputStream inpt)
+    public int readInt(InputStream inpt)
     {
+        if (debug)
+        {
+            System.out.println("Reading int: " + debugger);
+            debugger++;
+        }
+
         int intRead = -1;
         int intToUse = 0;
         try
@@ -279,5 +309,58 @@ public class ClientConnector extends Thread
 
         }
         return intToUse;
+    }
+
+    public void writeString(String s, OutputStream otpt)
+    {
+        if (debug)
+        {
+            System.out.println("Writing String: " + debugger);
+            debugger++;
+        }
+
+        char[] send = s.toCharArray();
+        try
+        {
+            for (int k = 0; k < send.length; k++)
+            {
+                otpt.write((int) send[k]);
+            }
+            otpt.write(3);
+        } catch (IOException e)
+        {
+
+        }
+    }
+
+    public String readString(InputStream inpt)
+    {
+        if (debug)
+        {
+            System.out.println("Reading String: " + debugger);
+            debugger++;
+        }
+
+        String s = "";
+        int intRead = -1;
+
+        try
+        {
+            while (intRead != 3)
+            {
+                intRead = inpt.read();
+                if (intRead == 3)
+                {
+                    return s;
+                } else
+                {
+                    s += (char) intRead;
+                }
+            }
+        } catch (IOException e)
+        {
+            return s;
+        }
+        return s;
     }
 }

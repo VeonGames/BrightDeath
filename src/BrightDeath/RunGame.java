@@ -35,6 +35,7 @@ public class RunGame extends JComponent
         {
             public void windowClosing(java.awt.event.WindowEvent windowEvent)
             {
+System.out.println("RunGame: 38: Window is shutting-down");
                 GV.connect = false;
             }
         });

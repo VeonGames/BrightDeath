@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 
 public class GV
 {
+    static String name;
     static String serverName;
     static boolean city;
     static boolean run = true, connect = true;

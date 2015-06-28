@@ -72,7 +72,7 @@ public class Draw extends JComponent
         }
 
         graph.drawImage(GV.playerPics[0][0], (int) (GV.width * .5), (int) (GV.height * .5), (int) (50*GV.sizeMod), (int) (GV.sizeMod*50), null);
-
+        System.out.println(GV.xPos);
         
         for(int i=0;i<GV.attackBoxes.size();i++)
         {
